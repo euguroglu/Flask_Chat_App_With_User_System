@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for
 from form import *
 import os
 from flask_sqlalchemy import SQLAlchemy
-
+from flask_login import LoginManager, UserMixin, login_user,current_user,login_required,logout_user
 
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -11,16 +11,22 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+os.path.join(basedir,'data.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+#configure flask login
+login = LoginManager(app)
+login.init_app(app)
 
 #if we are not define database name flask will use lower case class name
 #which is User(user) as table name
-class User(db.Model):
+class User(UserMixin,db.Model):
 
     __tablename__ = "users"
     id = db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(25),unique=True,nullable=False)
     password = db.Column(db.String(),nullable=False)
 
+@login.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 @app.route("/",methods = ['GET','POST'])
 def index():
@@ -50,9 +56,24 @@ def login():
 
     #Allow login if validation success
     if form.validate_on_submit():
-        return "Logged in"
+        user_object = User.query.filter_by(username=form.username.data).first()
+        login_user(user_object)
+
+        return redirect(url_for('chat'))
 
     return render_template('login.html',form=form)
+
+@app.route('/chat',methods=['GET','POST'])
+@login_required
+def chat():
+
+    return "Chat"
+
+@app.route('/logout',methods=['GET'])
+def logout():
+
+    logout_user()
+    return "logged out"
 
 
 if __name__ == "__main__":
