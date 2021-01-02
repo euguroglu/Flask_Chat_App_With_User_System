@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav>
+
+    </nav>
+    <div id="main-section">
+      <!-- Room selection -->
+      <nav id="sidebar">
+        <h4>ROOMS</h4>
+        {%for room in rooms%}
+          <p class="select-room">{{room|title}}</p>
+        {%endfor%}
+      </nav>
+      <!-- Message area -->
+      <div id="righside-pannel">
+        <!-- Display message -->
+        <div id="display_message_section">
+
+        </div>
+        <!-- input message -->
+        <div id="input-area">
+          <input type="text" id="user_message" placeholder="Type here..." autocomplete="off">
+          <button type="button" id="send_message">SEND</button>
+        </div>
+      </div>
+    </div>
+    <!-- Get username -->
+    <script type="text/javascript">
+      const username = `{{username}}`;
+    </script>
+    <!-- Custom chat js -->
+    <script src="{{url_for('static',filename='scripts/chat_page.js')}}"></script>
+    <!-- Socket IO js -->
+
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.0.4/socket.io.js" integrity="sha512-aMGMvNYu8Ue4G+fHa359jcPb1u+ytAF+P2SCb+PxrjCdO3n3ZTxJ30zuH39rimUggmTwmh2u7wvQsDTHESnmfQ==" crossorigin="anonymous"></script>
+      <!-- Custom Socketıo js -->
+    <script src="{{url_for('static',filename='scripts/socketio.js')}}"></script>
+
+
+  </body>
+</html>
