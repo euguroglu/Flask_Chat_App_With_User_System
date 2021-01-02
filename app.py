@@ -3,6 +3,7 @@ from form import *
 import os
 from flask_sqlalchemy import SQLAlchemy
 
+
 app = Flask(__name__)
 basedir = os.path.abspath(os.path.dirname(__file__))
 app.config['SECRET_KEY'] = 'secret1'
@@ -30,9 +31,11 @@ def index():
 
         username = form.username.data
         password = form.password.data
+#Password hashing using passlib(function takes care of salt as well)
+        hashed_password = pbkdf2_sha256.hash(password)
 
         #Add user to database
-        user = User(username=username,password=password)
+        user = User(username=username,password=hashed_password)
         db.session.add(user)
         db.session.commit()
 
