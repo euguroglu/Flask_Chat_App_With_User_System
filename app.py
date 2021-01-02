@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for,flash
 from form import *
 import os
 from flask_sqlalchemy import SQLAlchemy
@@ -44,7 +44,7 @@ def index():
         user = User(username=username,password=hashed_password)
         db.session.add(user)
         db.session.commit()
-
+        flash('Registered succesfully. Please login.','success')
         return redirect(url_for('login'))
 
     return render_template('index.html',form=form)
@@ -64,8 +64,11 @@ def login():
     return render_template('login.html',form=form)
 
 @app.route('/chat',methods=['GET','POST'])
-@login_required
 def chat():
+
+    if not current_user.is_authenticated:
+        flash('Please login.','danger')
+        return redirect(url_for('login'))
 
     return "Chat"
 
@@ -73,7 +76,8 @@ def chat():
 def logout():
 
     logout_user()
-    return "logged out"
+    flash('You have logged out succesfully','success')
+    return redirect(url_for('login'))
 
 
 if __name__ == "__main__":

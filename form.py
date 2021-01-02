@@ -4,6 +4,7 @@ from wtforms.validators import InputRequired, Length, EqualTo, ValidationError
 from app import User
 from passlib.hash import pbkdf2_sha256
 
+
 #username and password checker defined outside the class
 def invalid_credentials(form,field):
 
